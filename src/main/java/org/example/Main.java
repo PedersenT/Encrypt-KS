@@ -4,11 +4,18 @@ package org.example;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception{
 
+//        Encryption encryption = new Encryption();
+        FileWriter fileWriter = new FileWriter();
+        TextHandler textHandler = new TextHandler();
+        CaesarEncryption caesarEncryption = new CaesarEncryption();
+        Encryption encryption = new Encryption();
 
         String text = """
                 Examples
@@ -26,37 +33,41 @@ public class Main {
                 articles that arrive to the centre can be substantially larger than the number of technicians
                 available.
                 """;
+        String[] words = textHandler.convertToArray(text);
+
 
         int encryptionCount = 5;
 
-        String[] words = text.split("\\G\\s+");
 
-        Encryption encryption = new Encryption();
-        FileWriter fileWriter = new FileWriter();
+//        Caesar
+//        String[] encryptedElements = caesarEncryption.encryptArray(words,encryptionCount);
+//        // File path
+//        Path path=Path.of("C:/Jobb/Intervju/KS/encrypted_output.txt");
+//        // Write to file
+//        fileWriter.writeTofile(encryptedElements, path);
+
+
+//      Blowfish
+        // Encrypt and save to array
+        String[] encryptedElements = encryption.encryptArray(words, encryptionCount);
+        System.out.println("\nEncrypted array:" + Arrays.toString(encryptedElements));
+
+        // File path
         Path path=Path.of("C:/Jobb/Intervju/KS/encrypted_output.txt");
 
-        String[] encryptedElements = encryption.encryptArray(words, encryptionCount);
-
-        System.out.println("\nEncrypted array:");
-        for (String encryptedElement : encryptedElements) {
-            System.out.println(encryptedElement);
-        }
-
+        // Write to file
         fileWriter.writeTofile(encryptedElements, path);
 
-        // Read the contents of the encrypted file
-        List<String> encryptedLines = Files.readAllLines(path);
-        // Convert the list of lines to an array
-        String[] encryptedFromFile = encryptedLines.toArray(new String[0]);
-
-        // Decrypt
-        String[] decryptedElements = encryption.decryptArray(encryptedFromFile, encryptionCount);
+        // Decrypt from file
+        String[] decryptedElements = encryption.decryptArray(fileWriter.readFromFile(path), encryptionCount);
 
         // Display the decrypted array
-        System.out.println("\nDecrypted array:");
-        for (String decryptedElement : decryptedElements) {
-            System.out.println(decryptedElement);
-        }
+        System.out.println("\nDecrypted array:" + Arrays.toString(decryptedElements));
+
+
+
+
+
     }
 
 
