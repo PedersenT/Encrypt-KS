@@ -4,6 +4,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Base64;
 
 public class Encryption {
@@ -20,11 +21,16 @@ public class Encryption {
         return keyGenerator.generateKey();
     }
 
-    public String[] encryptArray(String[] array) throws Exception {
-        String[] encryptedArray = new String[array.length];
-        for (int i = 0; i < array.length; i++) {
-            encryptedArray[i] = encryptString(array[i], secretKey);
+    public String[] encryptArray(String[] array, int encryptionCount) throws Exception {
+        String[] encryptedArray = array.clone();
+        for(int j=0; j<encryptionCount; j++){
+            for (int i = 0; i < array.length; i++) {
+                encryptedArray[i] = encryptString(encryptedArray[i], secretKey);
+
+            }
+            System.out.println(j + " " + Arrays.toString(encryptedArray));
         }
+
         return encryptedArray;
     }
 
@@ -35,12 +41,14 @@ public class Encryption {
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-    public String[] decryptArray(String[] array) throws Exception {
-        String[] decryptedArray = new String[array.length];
-        for (int i = 0; i < array.length; i++) {
-            decryptedArray[i] = decryptString(array[i], secretKey);
-        }
+    public String[] decryptArray(String[] array, int encryptionCount) throws Exception {
+        String[] decryptedArray = array.clone();
 
+        for(int j=0; j<encryptionCount; j++){
+            for (int i = 0; i < array.length; i++) {
+                decryptedArray[i] = decryptString(decryptedArray[i], secretKey);
+            }
+        }
         return decryptedArray;
     }
     private String decryptString(String encryptedInput, SecretKey secretKey) throws Exception {

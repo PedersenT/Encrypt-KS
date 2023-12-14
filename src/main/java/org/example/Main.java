@@ -1,6 +1,11 @@
 package org.example;
 
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) throws Exception{
 
@@ -22,23 +27,30 @@ public class Main {
                 available.
                 """;
 
-        int encryptionCount = 5000;
-
-        String outText = "";
+        int encryptionCount = 5;
 
         String[] words = text.split("\\G\\s+");
 
         Encryption encryption = new Encryption();
+        FileWriter fileWriter = new FileWriter();
+        Path path=Path.of("C:/Jobb/Intervju/KS/encrypted_output.txt");
 
-        String[] encryptedElements = encryption.encryptArray(words);
+        String[] encryptedElements = encryption.encryptArray(words, encryptionCount);
 
         System.out.println("\nEncrypted array:");
         for (String encryptedElement : encryptedElements) {
             System.out.println(encryptedElement);
         }
 
-        // Decrypt each element
-        String[] decryptedElements = encryption.decryptArray(encryptedElements);
+        fileWriter.writeTofile(encryptedElements, path);
+
+        // Read the contents of the encrypted file
+        List<String> encryptedLines = Files.readAllLines(path);
+        // Convert the list of lines to an array
+        String[] encryptedFromFile = encryptedLines.toArray(new String[0]);
+
+        // Decrypt
+        String[] decryptedElements = encryption.decryptArray(encryptedFromFile, encryptionCount);
 
         // Display the decrypted array
         System.out.println("\nDecrypted array:");
